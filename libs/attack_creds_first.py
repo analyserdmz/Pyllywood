@@ -87,5 +87,3 @@ def attackCredentials(target, port, authmethod):
                     attackRoutesWithCreds(target, username, password, port, authmethod)
     except:
         pass
-
-# attackCredentials("79.129.152.137", 554, "digest")
