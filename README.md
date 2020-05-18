@@ -30,6 +30,7 @@ This is a **Proof of Concept** that took me exactly 4 days to complete. The sour
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/analyserdmz/Pyllywood/issues) ![HitCount](http://hits.dwyl.com/analyserdmz/Pyllywood.svg)
 
 ### Contribution notes:
+- **DO NOT** use PyCurl for RTSP! There is no support for RTSP in PyCurl yet! I thought there was and I had to completely re-write the poc and make it use sockets.
 - Some devices respond with 200 even if the path is wrong.
 - Some devices terminate the connection when a valid path with valid credentials is accessed with "DESCRIBE" request, not respecting RFC. If we want to find even more paths or more credentials, the connections have to be looped again and again.
 - Some devices require a valid username and password at first place, while others require a valid path.
