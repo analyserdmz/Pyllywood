@@ -40,7 +40,8 @@ def attack_creds_after_routes(target, port, authmethod, urlList):
                         else:
                             received = ""
 
-                        s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, received, username, password)))
+                        route = urlparse(describeURL).path
+                        s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, received, username, password, route)))
                         receivedBuffer = s.recv(ah.configJson["bufLen"]).decode()
                         seq += 1
                         if "RTSP/1.0 200" in receivedBuffer:
@@ -73,7 +74,8 @@ def attack_creds_after_routes(target, port, authmethod, urlList):
                 else:
                     received = ""
 
-                s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, received, username, password)))
+                route = urlparse(describeURL).path
+                s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, received, username, password, route)))
                 receivedBuffer = s.recv(ah.configJson["bufLen"]).decode()
                 seq += 1
                 if "RTSP/1.0 200" in receivedBuffer:
