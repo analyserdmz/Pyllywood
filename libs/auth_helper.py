@@ -47,6 +47,9 @@ def authBuilder(authMethod, tempRecv, username, password, uri):
         begin = tempRecv.find("\"", start)
         end = tempRecv.find("\"", begin + 1)
         nonce = tempRecv[begin+1:end]
-        authSeq = generateAuthString(username,password,realm,"DESCRIBE","/{}".format(uri),nonce)
+        if uri.startswith("/"):
+            authSeq = generateAuthString(username,password,realm,"DESCRIBE","{}".format(uri),nonce)
+        else:
+            authSeq = generateAuthString(username,password,realm,"DESCRIBE","/{}".format(uri),nonce)
         # print(authSeq)
         return authSeq
