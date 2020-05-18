@@ -31,7 +31,7 @@ This is a **Proof of Concept** that took me exactly 4 days to complete. The sour
 
 ### Contribution notes:
 - Some devices respond with 200 even if the path is wrong.
-- Some devices terminates the connection when a valid path with valid credentials is accessed with "DESCRIBE" request, not respecting RFC.
+- Some devices terminate the connection when a valid path with valid credentials is accessed with "DESCRIBE" request, not respecting RFC. If we want to find even more paths or more credentials, the connection have to be looped again and again.
 - Some devices require a valid username and password at first place, while others require a valid path.
 - Some devices respond with 401 when a valid path is found, while others respond with 403.
 - A complete RFC-respective conversation can be used to validate streams ("SETUP" and "PLAY" requests), but it doesn't seem to matter at all. I am using only "DESCRIBE" requests.
