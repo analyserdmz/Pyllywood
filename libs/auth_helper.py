@@ -33,7 +33,7 @@ def generateAuthString(username,password,realm,method,uri,nonce):
     mapRetInf += "response=\"{}\"".format(response)
     return mapRetInf.encode()
 
-def authBuilder(authMethod, tempRecv, username, password):
+def authBuilder(authMethod, tempRecv, username, password, uri):
     if authMethod == "basic":
         authSeq = base64.b64encode("{}:{}".format(username, password).encode()).decode()
         authSeq = "Basic {}".format(authSeq)
@@ -47,6 +47,6 @@ def authBuilder(authMethod, tempRecv, username, password):
         begin = tempRecv.find("\"", start)
         end = tempRecv.find("\"", begin + 1)
         nonce = tempRecv[begin+1:end]
-        authSeq = generateAuthString(username,password,realm,"DESCRIBE","/sdekfjvhejkhrv",nonce)
+        authSeq = generateAuthString(username,password,realm,"DESCRIBE","/{}".format(uri),nonce)
         # print(authSeq)
         return authSeq
