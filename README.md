@@ -29,6 +29,14 @@ This is a **Proof of Concept** that took me exactly 4 days to complete. The sour
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/analyserdmz/Pyllywood/issues) ![HitCount](http://hits.dwyl.com/analyserdmz/Pyllywood.svg)
 
+### Contribution notes:
+- Some devices respond with 200 even if the path is wrong.
+- Some devices terminates the connection when a valid path with valid credentials is accessed with "DESCRIBE" request, not respecting RFC.
+- Some devices require a valid username and password at first place, while others require a valid path.
+- Some devices respond with 401 when a valid path is found, while others respond with 403.
+- A complete RFC-respective conversation can be used to validate streams ("SETUP" and "PLAY" requests), but it doesn't seem to matter at all. I am using only "DESCRIBE" requests.
+- Some devices respond with 200 no matter what. I assume these are devices with either no authentication or honeypots (?).
+
 ### Special thanks to:
 
 - [Ullaakut](https://github.com/Ullaakut) for his **AWESOME** project [Cameradar](https://github.com/Ullaakut/cameradar) which was my inspiration and for helping me understand how the RTSP logic flows!
