@@ -14,6 +14,7 @@ This is a **Proof of Concept** that took me exactly 4 days to complete. The sour
 - Extensive tests **especially for Route-first devices** (devices that require the stream path to be known) from people who actually own such devices
 - Implement an export function (M3U8 files for VLC, or even iSpy if possible)
 - Add support for other protocols (anything that iSpy supports)
+- Add support for devices that do not require authentication
 
 
 # PyLLyWOOD
