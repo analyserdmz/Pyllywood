@@ -12,12 +12,6 @@ def attackRoutesWithCreds(target, username, password, port, authmethod):
         warnForMassiveFound = dict()
         warnForMassiveFound[target] = 0
 
-        if authmethod != "digest":
-            seq = 1
-            s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            s.settimeout(10)
-            s.connect((target,port))
-
         for route in ar.routeBuilder(username, password):
             if warnForMassiveFound[target] > 20:
                 print(colored('[-] Ending detection for {} due to mass 200 response codes.'.format(target), 'red'))
@@ -26,16 +20,14 @@ def attackRoutesWithCreds(target, username, password, port, authmethod):
                 break
 
             receivedBuffer = ""
+            seq = 1
+            s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            s.settimeout(10)
+            s.connect((target,port))
             if authmethod == "digest":
                 describeURL = "rtsp://{}:{}/{}".format(target, port, route)
-                seq = 1
-                s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                s.settimeout(10)
-                s.connect((target,port))
-
                 s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ""))
                 receivedBuffer = s.recv(ah.configJson["bufLen"]).decode()
-                # print(receivedBuffer)
                 seq += 1
             else:
                 describeURL = "rtsp://{}:{}@{}:{}/{}".format(username, password, target, port, route)
@@ -64,8 +56,8 @@ def attackCredentials(target, port, authmethod):
         s.connect((target,port))
 
         describeURL = "rtsp://{}:{}{}".format(target, port, "/sdekfjvhejkhrv")
-        s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, "", "", "/sdekfjvhejkhrv")))
-        receivedBuffer = s.recv(ah.configJson["bufLen"]).decode()
+        # s.send(ah.genDESCRIBE(describeURL,seq,ah.configJson["clUagent"], ah.authBuilder(authmethod, receivedBuffer, "", "", "/sdekfjvhejkhrv")))
+        # receivedBuffer = s.recv(ah.configJson["bufLen"]).decode()
 
         with open(os.path.join(os.path.dirname(__file__), 'resources\\creds.json'), 'r') as f:
             userpasslist = json.load(f)
@@ -83,7 +75,7 @@ def attackCredentials(target, port, authmethod):
                 seq += 1
                 # print(tmpDescribeRecv)
                 if "RTSP/1.0 404" in tmpDescribeRecv:
-                    # print(colored("[+] Attacking routes at {}:{} with valid username '{}' and password '{}' ({})...".format(target, port, username, password, authmethod), 'cyan'))
+                    print(colored("[+] Attacking routes at {}:{} with valid username '{}' and password '{}' ({})...".format(target, port, username, password, authmethod), 'cyan'))
                     attackRoutesWithCreds(target, username, password, port, authmethod)
     except:
         pass
