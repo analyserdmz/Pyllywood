@@ -13,8 +13,9 @@ def describe_GETAUTH(url,seq,userAgent):
     return msgRet.encode()
 
 def detect_auth(target, port):
-    try:
+    try: # Used to avoid time-out errors that breaks the flow
         seq = 1
+        authMethod = None
         # Some non-existent path here, to avoid 200 at /
         targetURL = "rtsp://{}:{}/sdekfjvhejkhrv".format(target, port)
         s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)

@@ -3,6 +3,7 @@
 - Basic & Digest authentication brute force
 - Multi-threaded port scanning
 - Credentials-first & Route-first devices are supported
+- Masscan support
 
 
 This is a **Proof of Concept** that took me exactly 4 days to complete. The source code is sloppy -yet working but not as it should- and requires a lot of work to become a complete project.
@@ -10,7 +11,7 @@ This is a **Proof of Concept** that took me exactly 4 days to complete. The sour
 ### Help is needed to complete the following:
 
 - Source code complete refactoring (Threading, Variables, Logic etc)
-- Add support for Masscan for quicker port scans
+- Add script parameters
 - Extensive tests **especially for Route-first devices** (devices that require the stream path to be known) from people who actually own such devices
 - Extensive tests for **DIGEST AUTH devices**
 - Implement an export function (M3U8 files for VLC, or even iSpy if possible)
@@ -24,7 +25,7 @@ This is a **Proof of Concept** that took me exactly 4 days to complete. The sour
 ##### Hollywood-style CCTV hacking - PoC
 
 
-![](https://i.ibb.co/4g7ghfg/Pyllywood.png)
+![](https://i.ibb.co/zXJbtVV/cctvhacking.png)
 
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/analyserdmz/Pyllywood/issues) ![HitCount](http://hits.dwyl.com/analyserdmz/Pyllywood.svg)
