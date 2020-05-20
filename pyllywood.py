@@ -10,7 +10,7 @@ init()
 ascii_banner = pyfiglet.figlet_format("Pyllywood.")
 print("{}\n{}\n\n".format(ascii_banner, "Hollywood-style CCTV hacking - PoC"))
 
-gp.discover('79.130.217.132')
+gp.discover('192.168.2.0/24')
 print(colored("[*] Waiting for threads to finish...", 'yellow'))
 time.sleep(10)
 
