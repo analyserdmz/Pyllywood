@@ -115,7 +115,7 @@ def start(target, port, authmethod, foundRoutes=[]):
         finalRet = dict() # Final return with stream URLs
         for user in userpasslist['usernames']:
             for pwd in userpasslist['passwords']:
-                print('\r[INFO] Trying {}/{} agains {} at port {}'.format(user, pwd, target, port), end='\r', flush=True)
+                # print('\r[INFO] Trying {}/{} agains {} at port {}'.format(user, pwd, target, port), end='\r', flush=True)
                 try:
                     recBuffer = ""
                     digestBuffer = ""
