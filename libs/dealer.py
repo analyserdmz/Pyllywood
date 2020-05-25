@@ -5,7 +5,7 @@ def describe(url, sequence):
     msg += "CSeq: {}\r\n".format(sequence)
     msg += "User-Agent: LibVLC/2.1.4 (LIVE555 Streaming Media v2014.01.21)"
     msg += "Accept: application/sdp"
-    msg += "\r\n"
+    msg += "\r\n\r\n"
     return msg.encode()
 
 def decide(target, port, url=None):
