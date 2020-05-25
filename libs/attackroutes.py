@@ -8,7 +8,7 @@ def describe(url, sequence, authSequence=None):
         msg += "Authorization: {}\r\n".format(authSequence)
     msg += "User-Agent: LibVLC/2.1.4 (LIVE555 Streaming Media v2014.01.21)\r\n"
     msg += "Accept: application/sdp\r\n"
-    msg += "\r\n\r\n"
+    msg += "\r\n"
     return msg.encode()
 
 def generateAuthString(username, password, realm, method, uri, nonce):
@@ -44,16 +44,16 @@ def authBuilder(authMethod, buffer, username, password, uri):
         return authSeq
 
 def start(target, port, authmethod, username=None, password=None):
-    sequence = 1 # Starting request sequence (needed in each request)
     finalRoutes = []
 
     if authmethod == None: # Here we try to find valid routes first (without user/pass combos)
         for route in routebuilder.build(): # Letting username & password intact (invalid)
             try:
+                sequence = 1 # Starting request sequence (needed in each request)
                 recBuffer = ""
                 # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(3) # We allow 3 seconds of timeout
+                sock.settimeout(20) # We allow 3 seconds of timeout
                 sock.connect((target, port)) # Double parenthesis required
 
                 descURL = "rtsp://{}:{}/{}".format(target, port, route) # Complete DESCRIBE URL
@@ -68,20 +68,22 @@ def start(target, port, authmethod, username=None, password=None):
             except:
                 continue
     elif authmethod == "Basic":
-        # We connect to the target outside the loop (for Basic Auth devices it's ok to connect only once)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(3) # We allow 3 seconds of timeout
-        sock.connect((target, port)) # Double parenthesis required
-
         for route in routebuilder.build(username, password): # Building the route list with user and pass this time
             try:
+                sequence = 1 # Starting request sequence (needed in each request)
                 recBuffer = ""
+
+                # We connect to the target outside the loop (for Basic Auth devices it's ok to connect only once)
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(20) # We allow 3 seconds of timeout
+                sock.connect((target, port)) # Double parenthesis required
+
                 descURL = "rtsp://{}:{}@{}:{}/{}".format(username, password, target, port, route) # Complete DESCRIBE URL for Basic Auth
 
-                sock.send(describe(descURL, sequence, authBuilder(authmethod, "", username, password, "/{}".format(route))))
+                sock.send(describe(descURL, sequence, authBuilder(authmethod, "", username, password, descURL)))
                 recBuffer = sock.recv(1024).decode() # Receive the response
                 sequence += 1
-
+                # print(recBuffer)
                 if "RTSP/1.0 200" in recBuffer:
                     if descURL not in finalRoutes:
                         finalRoutes.append(descURL)
@@ -90,6 +92,7 @@ def start(target, port, authmethod, username=None, password=None):
     else: # Digest
         for route in routebuilder.build(username, password): # Building the route list with user and pass this time
             try:
+                sequence = 1 # Starting request sequence (needed in each request)
                 recBuffer = ""
                 digestBuffer = ""
 
@@ -97,7 +100,7 @@ def start(target, port, authmethod, username=None, password=None):
 
                 # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(3) # We allow 3 seconds of timeout
+                sock.settimeout(20) # We allow 3 seconds of timeout
                 sock.connect((target, port)) # Double parenthesis required
 
                 # Get digest response (nonce, realm etc)
