@@ -15,7 +15,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--target", required=True, help="Target in CIDR format, or just a single IP address.")
 args = parser.parse_args()
 
-if re.match("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))$", args.target) == None:
+cidrregex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))$"
+ipv4regex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+if re.match(cidrregex, args.target) == None and re.match(ipv4regex, args.target) == None:
     print(colored("[ERR] Invalid target specified.", "red"))
     sys.exit(0)
 
