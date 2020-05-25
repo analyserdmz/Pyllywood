@@ -1,4 +1,4 @@
-import sys, time
+import sys, time, argparse, re
 import pyfiglet #pip
 from colorama import init
 from termcolor import colored
@@ -11,8 +11,16 @@ init()
 ascii_banner = pyfiglet.figlet_format("Pyllywood.")
 print("{}\n{}\n\n".format(ascii_banner, "Hollywood-style CCTV hacking - Refactored PoC"))
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-t", "--target", required=True, help="Target in CIDR format, or just a single IP address.")
+args = parser.parse_args()
+
+if re.match("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))$", args.target) == None:
+    print(colored("[ERR] Invalid target specified.", "red"))
+    sys.exit(0)
+
 print(colored("[INFO] Starting...", "cyan"))
-scanResults = masscan.detect('192.168.2.0/24')
+scanResults = masscan.detect(args.target)
 if scanResults == None:
     print(colored("[!] No targets found. Try another network.", "red"))
     sys.exit(0)
