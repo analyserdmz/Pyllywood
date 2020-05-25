@@ -105,7 +105,6 @@ def start(target, port, authmethod, foundRoutes=[]):
                             sequence += 1
 
                             if "RTSP/1.0 200" in recBuffer:
-                                print("[SUCCESS] Username/Password for {}:{} -> {}/{}".format(target, port, foundUser, foundPassword))
                                 finalRet.append("rtsp://{}:{}@{}:{}/{}".format(foundUser, foundPassword, target, port, "/{}".route))
                 except:
                     continue
@@ -138,7 +137,6 @@ def start(target, port, authmethod, foundRoutes=[]):
                     sequence += 1
                     # print(recBuffer)
                     if "RTSP/1.0 404" in recBuffer:
-                        print("[SUCCESS] Username/Password for {}:{} -> {}/{}".format(target, port, user, pwd))
                         if target not in finalRet:
                             finalRet[target] = dict()
                         if port not in finalRet[target]:
