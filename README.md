@@ -18,7 +18,7 @@ This is a **Proof of Concept**. The source code is refactored and now it works w
 - Create a single executable
 
 ### Known bugs
-- Sometimes although the route (path) exist and the credentials are correct, the script will cycle through 20 channels and -for no obvious reason- it will either find channels 1,3,5,7 or 2,4,6,8 (?)
+- **(FIXED!!!)** Sometimes although the route (path) exist and the credentials are correct, the script will cycle through 20 channels and -for no obvious reason- it will either find channels 1,3,5,7 or 2,4,6,8 (?)
     - Multi-threaded attacks removed until the bug is corrected
 
 # PyLLyWOOD
