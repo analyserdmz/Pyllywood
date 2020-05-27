@@ -54,6 +54,12 @@ def start(target, port, authmethod, foundRoutes=[]):
         authDetected = dealer.decide(target, port, foundRoutes[0]) # Detect auth method since here we got only "None" auth
         foundUser = ""
         foundPassword = ""
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(20)
+        sock.connect((target, port))
+        sequence = 1
+
         for user in userpasslist['usernames']:
             if len(finalRet) > 0:
                 continue
@@ -61,12 +67,8 @@ def start(target, port, authmethod, foundRoutes=[]):
                 if len(finalRet) > 0:
                     continue
                 try:
-                    sequence = 0
                     recBuffer = ""
                     digestBuffer = ""
-                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    sock.settimeout(20)
-                    sock.connect((target, port))
 
                     if authDetected == "Digest":
                         # Get digest response (nonce, realm etc)
@@ -85,11 +87,10 @@ def start(target, port, authmethod, foundRoutes=[]):
                         foundUser = user
                         foundPassword = pwd
 
-                        sequence = 1
                         for route in foundRoutes: # For each (probably) valid route
-                            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                            sock.settimeout(20)
-                            sock.connect((target, port))
+                            # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                            # sock.settimeout(20)
+                            # sock.connect((target, port))
 
                             if authDetected == "Digest":
                                 # Get digest response (nonce, realm etc)
@@ -112,23 +113,23 @@ def start(target, port, authmethod, foundRoutes=[]):
     else: # Here's credentials attack first (without a valid route)
         finalRet = dict() # Final return with stream URLs
 
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(20)
+        sock.connect((target, port))
+        sequence = 1
+
         for user in userpasslist['usernames']:
             for pwd in userpasslist['passwords']:
                 try:
-                    sequence = 1
                     recBuffer = ""
                     digestBuffer = ""
-
-                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    sock.settimeout(20)
-                    sock.connect((target, port))
 
                     if authmethod == "Digest":
                         descURL = "rtsp://{}:{}/gerghertherthrteh".format(target, port)
                         # Get digest response (nonce, realm etc)
                         sock.send(describe(descURL, sequence))
                         digestBuffer = sock.recv(1024).decode()
-                        # sequence += 1
+                        sequence += 1
                     else: # Basic authentication Describe URL
                         descURL = "rtsp://{}:{}@{}:{}/gerghertherthrteh".format(user, pwd, target, port)
 

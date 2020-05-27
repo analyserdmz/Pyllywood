@@ -46,15 +46,16 @@ def authBuilder(authMethod, buffer, username, password, uri):
 def start(target, port, authmethod, username=None, password=None):
     finalRoutes = []
 
+    # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(20) # We allow 3 seconds of timeout
+    sock.connect((target, port)) # Double parenthesis required
+    sequence = 1 # Starting request sequence (needed in each request)
+
     if authmethod == None: # Here we try to find valid routes first (without user/pass combos)
         for route in routebuilder.build(): # Letting username & password intact (invalid)
             try:
-                sequence = 1 # Starting request sequence (needed in each request)
                 recBuffer = ""
-                # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(20) # We allow 3 seconds of timeout
-                sock.connect((target, port)) # Double parenthesis required
 
                 descURL = "rtsp://{}:{}/{}".format(target, port, route) # Complete DESCRIBE URL
 
@@ -68,15 +69,15 @@ def start(target, port, authmethod, username=None, password=None):
             except:
                 continue
     elif authmethod == "Basic":
+        # We connect to the target outside the loop (for Basic Auth devices it's ok to connect only once)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(20) # We allow 3 seconds of timeout
+        sock.connect((target, port)) # Double parenthesis required
+        sequence = 1 # Starting request sequence (needed in each request)
+
         for route in routebuilder.build(username, password): # Building the route list with user and pass this time
             try:
-                sequence = 1 # Starting request sequence (needed in each request)
                 recBuffer = ""
-
-                # We connect to the target outside the loop (for Basic Auth devices it's ok to connect only once)
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(20) # We allow 3 seconds of timeout
-                sock.connect((target, port)) # Double parenthesis required
 
                 descURL = "rtsp://{}:{}@{}:{}/{}".format(username, password, target, port, route) # Complete DESCRIBE URL for Basic Auth
 
@@ -90,18 +91,18 @@ def start(target, port, authmethod, username=None, password=None):
             except:
                 continue
     else: # Digest
+        # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(20) # We allow 3 seconds of timeout
+        sock.connect((target, port)) # Double parenthesis required
+        sequence = 1 # Starting request sequence (needed in each request)
+
         for route in routebuilder.build(username, password): # Building the route list with user and pass this time
             try:
-                sequence = 1 # Starting request sequence (needed in each request)
                 recBuffer = ""
                 digestBuffer = ""
 
                 descURL = "rtsp://{}:{}/{}".format(target, port, route)
-
-                # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(20) # We allow 3 seconds of timeout
-                sock.connect((target, port)) # Double parenthesis required
 
                 # Get digest response (nonce, realm etc)
                 sock.send(describe(descURL, sequence))
