@@ -55,10 +55,14 @@ def start(target, port, authmethod, foundRoutes=[]):
         foundUser = ""
         foundPassword = ""
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(20)
-        sock.connect((target, port))
-        sequence = 1
+        try:
+            # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(20) # We allow 3 seconds of timeout
+            sock.connect((target, port)) # Double parenthesis required
+            sequence = 1 # Starting request sequence (needed in each request)
+        except:
+            return
 
         for user in userpasslist['usernames']:
             if len(finalRet) > 0:
@@ -113,10 +117,14 @@ def start(target, port, authmethod, foundRoutes=[]):
     else: # Here's credentials attack first (without a valid route)
         finalRet = dict() # Final return with stream URLs
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(20)
-        sock.connect((target, port))
-        sequence = 1
+        try:
+            # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(20) # We allow 3 seconds of timeout
+            sock.connect((target, port)) # Double parenthesis required
+            sequence = 1 # Starting request sequence (needed in each request)
+        except:
+            return
 
         for user in userpasslist['usernames']:
             for pwd in userpasslist['passwords']:

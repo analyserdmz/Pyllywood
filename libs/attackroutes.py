@@ -46,11 +46,14 @@ def authBuilder(authMethod, buffer, username, password, uri):
 def start(target, port, authmethod, username=None, password=None):
     finalRoutes = []
 
-    # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(20) # We allow 3 seconds of timeout
-    sock.connect((target, port)) # Double parenthesis required
-    sequence = 1 # Starting request sequence (needed in each request)
+    try:
+        # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(20) # We allow 3 seconds of timeout
+        sock.connect((target, port)) # Double parenthesis required
+        sequence = 1 # Starting request sequence (needed in each request)
+    except:
+        return
 
     if authmethod == None: # Here we try to find valid routes first (without user/pass combos)
         for route in routebuilder.build(): # Letting username & password intact (invalid)
@@ -69,11 +72,14 @@ def start(target, port, authmethod, username=None, password=None):
             except:
                 continue
     elif authmethod == "Basic":
-        # We connect to the target outside the loop (for Basic Auth devices it's ok to connect only once)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(20) # We allow 3 seconds of timeout
-        sock.connect((target, port)) # Double parenthesis required
-        sequence = 1 # Starting request sequence (needed in each request)
+        try:
+            # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(20) # We allow 3 seconds of timeout
+            sock.connect((target, port)) # Double parenthesis required
+            sequence = 1 # Starting request sequence (needed in each request)
+        except:
+            return
 
         for route in routebuilder.build(username, password): # Building the route list with user and pass this time
             try:
@@ -91,11 +97,14 @@ def start(target, port, authmethod, username=None, password=None):
             except:
                 continue
     else: # Digest
-        # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(20) # We allow 3 seconds of timeout
-        sock.connect((target, port)) # Double parenthesis required
-        sequence = 1 # Starting request sequence (needed in each request)
+        try:
+            # We connect to the target in a loop (some DIGEST AUTH devices terminate the connection if a route is found)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(20) # We allow 3 seconds of timeout
+            sock.connect((target, port)) # Double parenthesis required
+            sequence = 1 # Starting request sequence (needed in each request)
+        except:
+            return
 
         for route in routebuilder.build(username, password): # Building the route list with user and pass this time
             try:

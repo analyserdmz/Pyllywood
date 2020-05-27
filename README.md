@@ -1,15 +1,21 @@
 ### Features
 
-- Basic & Digest authentication brute force
-- Credentials-first & Route-first devices are supported
+- Basic authentication brute force
+- Digest authentication brute force
+- Credentials-first devices
+- Route-first devices (Needs testing)
 - Masscan usage for extreme scan speed
+- Multi-threaded attacks
 
+### How to run
+```
+python pyllywood.py -t IP/CIDR
+```
 
 This is a **Proof of Concept**. The source code is refactored and now it works well agains Basic and Digest authentication devices. I've tried to include comments to allow you understand my logic behind it. **ANY CONTRIBUTE IS APPRECIATED!**
 
 ### Help is needed to complete the following:
 
-- Add script parameters
 - Extensive tests **especially for Route-first devices** (devices that require the stream path to be known) from people who actually own such devices since i don't
 - Implement an export function (M3U8 files for VLC, or even iSpy if possible)
 - Add support for other protocols (anything that iSpy supports)
@@ -17,9 +23,7 @@ This is a **Proof of Concept**. The source code is refactored and now it works w
 - Create a requirements.txt for easy installation
 - Create a single executable
 
-### Known bugs
-- **(FIXED!!!)** Sometimes although the route (path) exist and the credentials are correct, the script will cycle through 20 channels and -for no obvious reason- it will either find channels 1,3,5,7 or 2,4,6,8 (?)
-    - Multi-threaded attacks removed until the bug is corrected
+### Multi-threading is back!
 
 # PyLLyWOOD
 ##### Hollywood-style CCTV hacking - PoC
