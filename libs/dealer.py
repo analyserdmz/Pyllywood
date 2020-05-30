@@ -36,6 +36,3 @@ def decide(target, port, url=None):
         return
 
     return authMethod
-
-# for i in range(0, 9):
-#     print(decide("79.11.195.16", 554))
